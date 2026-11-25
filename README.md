@@ -1,6 +1,7 @@
 # ⚔️ RepoRPG — Turn Your GitHub into an RPG Character
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![Tests](https://github.com/roma36637-alt/repo-rpg/actions/workflows/tests.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![GitHub stars](https://img.shields.io/github/stars/roma36637-alt/repo-rpg?style=social)
