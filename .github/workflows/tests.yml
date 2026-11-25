@@ -7,10 +7,17 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: test (py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.12"]
+        include:
+          # Старые версии Python нет на Ubuntu 26.04 — берём 22.04.
+          - python-version: "3.9"
+            os: ubuntu-22.04
+          - python-version: "3.12"
+            os: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
