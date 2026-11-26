@@ -142,3 +142,15 @@ All of them: no dependencies, MIT, tested on Linux, macOS and Windows.
 ## 📜 License
 
 MIT — use it freely. If you like it, drop a ⭐ — it really helps!
+
+
+### Pipe SVG output
+
+Use `--output -` (or `-o -`) to write only the SVG to stdout:
+
+```sh
+python rpg.py -u torvalds --output - > card.svg
+```
+
+Progress and the terminal card go to stderr in this mode. `--quiet` suppresses
+those messages while still writing the SVG; a literal file named `-` is not created.

@@ -457,7 +457,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="RepoRPG — карточка RPG-персонажа из вашего профиля GitHub.",
     )
     parser.add_argument("-u", "--username", required=True, help="ник на GitHub")
-    parser.add_argument("-o", "--output", default="card.svg", help="куда сохранить SVG")
+    parser.add_argument("-o", "--output", default="card.svg", help="куда сохранить SVG (- для stdout)")
     parser.add_argument("--token", default=None,
                         help="GitHub-токен (или переменная GITHUB_TOKEN/GH_TOKEN)")
     parser.add_argument("--from-json", default=None, metavar="FILE",
@@ -478,8 +478,9 @@ def main(argv=None) -> int:
 
     token = args.token or os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
 
+    progress = sys.stderr if args.output == "-" else sys.stdout
     if not args.quiet:
-        print(f"Fetching @{args.username}...")
+        print(f"Fetching @{args.username}...", file=progress)
 
     if args.from_json:
         user, repos, avatar_uri = load_fixture(args.from_json)
@@ -491,9 +492,12 @@ def main(argv=None) -> int:
     data = analyze(user, repos, args.username)
 
     if not args.quiet:
-        print(render_terminal(args.username, data))
+        print(render_terminal(args.username, data), file=progress)
 
     svg = generate_svg(user, data, args.username, args.theme, avatar_uri)
+    if args.output == "-":
+        sys.stdout.write(svg)
+        return 0
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(svg, encoding="utf-8")
