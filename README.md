@@ -131,6 +131,14 @@ card.svg                   example card (auto-generated)
 `python rpg.py -u torvalds --from-json examples/torvalds.json`. Тесты:
 `python -m unittest discover -s tests -v`.
 
+## 🧰 More small tools
+
+- **[envspy](https://github.com/roma36637-alt/envspy)** — run a command and see which environment variables it really reads (Python + Node).
+- **[spillcheck](https://github.com/roma36637-alt/spillcheck)** — a receipt for what your command changed, including files Git ignores.
+- **[smeta-delta](https://github.com/roma36637-alt/smeta-delta)** — explain *why* an estimate total changed.
+
+All of them: no dependencies, MIT, tested on Linux, macOS and Windows.
+
 ## 📜 License
 
 MIT — use it freely. If you like it, drop a ⭐ — it really helps!
