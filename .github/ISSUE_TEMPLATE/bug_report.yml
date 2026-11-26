@@ -1,0 +1,64 @@
+name: Bug report
+description: Something did not work as expected
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this.
+
+        For card-rendering issues, if possible attach the generated `card.svg`
+        (drag it into the text box below) — it shows the problem immediately.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      render: shell
+      placeholder: python rpg.py -u torvalds --from-json examples/torvalds.json
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / traceback
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS and Python version
+      placeholder: "Windows 11, Python 3.12.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: online
+    attributes:
+      label: Online or offline mode?
+      options:
+        - Online (fetched from the GitHub API)
+        - Offline (--from-json)
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: The card, a screenshot, rate-limit messages — optional.
+    validations:
+      required: false
