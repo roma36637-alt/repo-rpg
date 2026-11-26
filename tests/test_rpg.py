@@ -7,6 +7,7 @@
 import json
 import sys
 import tempfile
+import subprocess
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -144,6 +145,40 @@ class FixtureTest(unittest.TestCase):
         text = rpg.render_terminal("tester", data)
         self.assertIn("@tester", text)
         self.assertIn("HP:", text)
+
+
+class StdoutCliTest(unittest.TestCase):
+    def test_file_output_still_writes_svg(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = Path(tmp) / "profile.json"
+            fixture.write_text(json.dumps({"user": make_user(), "repos": []}), encoding="utf-8")
+            output = Path(tmp) / "nested/card.svg"
+            result = subprocess.run([sys.executable, str(Path(rpg.__file__).resolve()),
+                                     "-u", "tester", "--from-json", str(fixture),
+                                     "-o", str(output), "--quiet"], cwd=tmp,
+                                    capture_output=True, text=True, encoding="utf-8")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            ET.fromstring(output.read_text(encoding="utf-8"))
+            self.assertIn("Saved to", result.stdout)
+
+    def test_stdout_output_is_svg_in_normal_and_quiet_modes(self):
+        script = Path(rpg.__file__).resolve()
+        for quiet in (False, True):
+            with self.subTest(quiet=quiet), tempfile.TemporaryDirectory() as tmp:
+                fixture = Path(tmp) / "profile.json"
+                fixture.write_text(json.dumps({"user": make_user(), "repos": make_repos(["Python"])}), encoding="utf-8")
+                args = [sys.executable, str(script), "-u", "tester", "--from-json", str(fixture), "--output", "-"]
+                if quiet:
+                    args.append("--quiet")
+                result = subprocess.run(args, cwd=tmp, capture_output=True, text=True, encoding="utf-8")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue(result.stdout.startswith("<svg"), result.stdout[:100])
+                ET.fromstring(result.stdout)
+                self.assertFalse((Path(tmp) / "-").exists())
+                if quiet:
+                    self.assertEqual(result.stderr, "")
+                else:
+                    self.assertIn("Fetching @tester", result.stderr)
 
 
 if __name__ == "__main__":
